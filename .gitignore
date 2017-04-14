@@ -3,3 +3,4 @@ build/
 venv/
 .pydevproject
 dist/
+thirdparts/
