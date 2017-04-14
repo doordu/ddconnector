@@ -1,0 +1,5 @@
+ddconnector.egg-info/
+build/
+venv/
+.pydevproject
+dist/
