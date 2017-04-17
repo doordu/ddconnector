@@ -7,8 +7,8 @@ from ddconnector.protocol import Protocol
 
 class Server:
     def __init__(self, server_address=('0.0.0.0', 9501)):
-        self.logger = logging.getLogger(__name__)
         self.server_address = server_address
+        self.transports = {}
         self.loop = uvloop.new_event_loop()
         factory = self.loop.create_server(Protocol, 
                                           *server_address)
@@ -16,7 +16,7 @@ class Server:
         
         
     def run(self):
-        self.logger.info("Staring up on {} port {}".format(
+        logging.info("Staring up on {} port {}".format(
                         *self.server_address))
         try:
             self.loop.run_forever()

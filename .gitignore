@@ -4,3 +4,4 @@ venv/
 .pydevproject
 dist/
 thirdparts/
+ddconnector.log
