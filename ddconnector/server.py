@@ -10,8 +10,8 @@ class Server:
         self.server_address = server_address
         self.transports = {}
         self.loop = uvloop.new_event_loop()
-        factory = self.loop.create_server(Protocol, 
-                                          *server_address)
+        factory = self.loop.create_server(
+                    lambda:Protocol(self),  *server_address)
         self.server = self.loop.run_until_complete(factory)
         
         

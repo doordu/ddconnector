@@ -9,15 +9,15 @@ from ddconnector.exceptions import (DecodeException,
 from ddconnector.processors import processors
 
 DELIMITER = b'*'
-transports = {}
 
 class Protocol(asyncio.Protocol):
+    def __init__(self, server):
+        self.server = server
+        self.guid = ''
+        self._buffer = b''
     
     def connection_made(self, transport):
-        self.transports = transports
         self.transport = transport
-        self._buffer = b''
-        self.guid = ''
     
     def data_received(self, data):
         '''
@@ -43,14 +43,17 @@ class Protocol(asyncio.Protocol):
         try:
             msg = decode(msg)
             processor = processors[msg['cmd']]
-            p = processor()
-            p.process(self, msg)
+            task = self.server.loop.create_task(processor(self, msg))
+            task.add_done_callback(self.done)
         except DecodeException:
             logging.error("%r => base64解码失败！", msg)
         except UnkownCommandException:
             logging.error("%r => 未知命令！", msg)
         except FormatException:
             logging.error("%r => 数据结构错误！", msg)
+            
+    def done(self, future):
+        print(future.result())
             
     def connection_lost(self, error):
         if error:

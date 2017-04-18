@@ -1,8 +1,8 @@
-from .heartbeat import Hearbeat
+from .heartbeat import heartbeat
 
 
 processors = {
-    'heart_beat': Hearbeat
+    'heart_beat': heartbeat
 }
 
 
