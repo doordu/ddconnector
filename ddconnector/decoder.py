@@ -10,3 +10,13 @@ def decode(s: bytes):
         return s
     except Exception:
         raise DecodeException()
+    
+    
+def encode(d: dict):
+    try:
+        s = json.dumps(d)
+        s = base64.encodebytes(s.encode("utf-8"))
+        return s + b'*'
+    except Exception:
+        raise DecodeException()
+        

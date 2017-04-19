@@ -2,6 +2,7 @@ import logging
 
 import aioredis
 
+from ddconnector.decoder import encode
 from ddconnector.exceptions import FormatException
 
         
@@ -23,5 +24,11 @@ async def heartbeat(protocol, msg):
         await redis.set(redis_key, '')
         redis.close()
         await redis.wait_closed()
+        response = {'request_id': guid, 
+                    'cmd': 'heart_beat'}
+        response = encode(response)
+        protocol.transport.write(response)
     except IndexError:
         raise FormatException()
+    
+    

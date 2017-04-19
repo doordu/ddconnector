@@ -44,7 +44,7 @@ class Protocol(asyncio.Protocol):
             msg = decode(msg)
             processor = processors[msg['cmd']]
             task = self.server.loop.create_task(processor(self, msg))
-            task.add_done_callback(self.done)
+            asyncio.ensure_future(task)
         except DecodeException:
             logging.error("%r => base64解码失败！", msg)
         except UnkownCommandException:
