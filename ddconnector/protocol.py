@@ -51,9 +51,8 @@ class Protocol(asyncio.Protocol):
             logging.error("%r => 未知命令！", msg)
         except FormatException:
             logging.error("%r => 数据结构错误！", msg)
-            
-    def done(self, future):
-        print(future.result())
+        except KeyError:
+            logging.error("%r => 未知命令！", msg)
             
     def connection_lost(self, error):
         if error:
@@ -62,7 +61,11 @@ class Protocol(asyncio.Protocol):
             logging.info("Closing")
             
     def eof_received(self):
-        print("Received EOF")
+        logging.info("收到断开连接请求： %s", self.guid)
+        try:
+            del self.server.transports[self.guid]
+        except KeyError:
+            pass
         if self.transport.can_write_eof():
             self.transport.write_eof()
                 
