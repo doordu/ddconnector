@@ -1,5 +1,5 @@
 import logging
-
+import json
 import aioredis
 
 from ddconnector.decoder import encode
@@ -19,9 +19,9 @@ async def heartbeat(protocol, msg):
         protocol.server.transports[guid] = protocol.transport
         protocol.guid = guid
         logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
-        redis = await aioredis.create_redis(('localhost', 6379), loop=protocol.server.loop)
-        redis_key = 'tcp_server_{}_heart_beat'.format(guid)
-        await redis.set(redis_key, '')
+        redis = await aioredis.create_redis(('10.0.0.71', 6379), password='Doordu2015!!', loop=protocol.server.loop)
+        redis_key = '{}_heart_beta'.format(guid)
+        await redis.set(redis_key, json.dumps(msg))
         redis.close()
         await redis.wait_closed()
         response = {'request_id': guid, 

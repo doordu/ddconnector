@@ -2,7 +2,7 @@ import asyncio
 import json
 import logging
 
-from ddconnector.decoder import decode
+from ddconnector.decoder import decode, encode
 from ddconnector.exceptions import (DecodeException, 
                                     UnkownCommandException,
                                     FormatException)
@@ -55,17 +55,18 @@ class Protocol(asyncio.Protocol):
             logging.error("%r => 未知命令！", msg)
             
     def connection_lost(self, error):
-        if error:
-            logging.error("Error: {}".format(error))
-        else:
-            logging.info("Closing")
-            
-    def eof_received(self):
-        logging.info("收到断开连接请求： %s", self.guid)
+        logging.info("收到断开连接请求！guid: %s", self.guid)
         try:
             del self.server.transports[self.guid]
         except KeyError:
             pass
+        if error:
+            logging.error("异常: {}".format(error))
+        else:
+            logging.info("关闭连接")
+            
+    def eof_received(self):
+        self.connection_lost(False)
         if self.transport.can_write_eof():
             self.transport.write_eof()
                 
