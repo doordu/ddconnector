@@ -1,12 +1,11 @@
 import logging
-
 import uvloop
 
 from ddconnector.protocol import Protocol
 
-
 class Server:
-    def __init__(self, server_address=('0.0.0.0', 9501)):
+    def __init__(self, config, server_address=('0.0.0.0', 9501)):
+        self.config = config
         self.server_address = server_address
         self.transports = {}
         self.loop = uvloop.new_event_loop()

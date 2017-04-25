@@ -19,7 +19,7 @@ async def heartbeat(protocol, msg):
         protocol.server.transports[guid] = protocol.transport
         protocol.guid = guid
         logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
-        redis = await aioredis.create_redis(('10.0.0.71', 6379), password='Doordu2015!!', loop=protocol.server.loop)
+        redis = await aioredis.create_redis((protocol.server.config['redis']['host'], protocol.server.config['redis']['port']), password=protocol.server.config['redis']['password'], loop=protocol.server.loop)
         redis_key = '{}_heart_beta'.format(guid)
         await redis.set(redis_key, json.dumps(msg))
         redis.close()
