@@ -15,6 +15,7 @@ async def heartbeat(protocol, msg):
     try:
         guid = msg['guid']
         version = msg['version']
+        msg['fd'] = 0
         address = protocol.transport.get_extra_info('peername')
         protocol.server.transports[guid] = protocol.transport
         protocol.guid = guid
@@ -25,8 +26,7 @@ async def heartbeat(protocol, msg):
         redis.close()
         await redis.wait_closed()
         response = {'request_id': guid, 
-                    'cmd': 'heart_beat',
-                    'fd': 0}
+                    'cmd': 'heart_beat'}
         response = encode(response)
         protocol.transport.write(response)
     except IndexError:
