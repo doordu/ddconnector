@@ -1,5 +1,4 @@
 import asyncio
-import json
 import logging
 
 from ddconnector.decoder import decode, encode
