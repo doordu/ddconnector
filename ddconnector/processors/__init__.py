@@ -18,6 +18,8 @@ processors = {
     'randomPwd': randompwd,                         # 开门密码
     'cardNew': cardnew,                             # 黑白名单
     'advertisement': adv,                           # 广告下发
+    'proxy': lambda: None,
+    'Prompt': lambda: None,           
 }
 
 
