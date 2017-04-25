@@ -14,6 +14,7 @@ setup(
     platforms='all',
     install_requires=[
         'uvloop',
+        'aioredis',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
