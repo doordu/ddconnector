@@ -11,6 +11,8 @@ from ddconnector.processors import processors
 DELIMITER = b'*'
 
 class Protocol(asyncio.Protocol):
+    __slots__ = ('server', 'guid', '_buffer', 'transport')
+    
     def __init__(self, server):
         self.server = server
         self.guid = ''
