@@ -5,13 +5,13 @@ from collections import defaultdict
 from ddconnector.decoder import encode
 
 
-async def softupdate(protocol, msg):
+async def cardnew(protocol, msg):
     """
-    门禁主机APK更新
+    门禁主黑白名单更新
     """
     if 'isClient' in msg:
-        logging.info("收到APK更新请求！guid: %s", msg['guid'])
-        request_message = {'cmd': 'softUpdate',
+        logging.info("收到黑白名单更新请求！guid: %s", msg['guid'])
+        request_message = {'cmd': 'cardNew',
                            'request_id': msg['guid'],
                            'response_params': 
                                 {'data': [json.loads(msg['data'])],

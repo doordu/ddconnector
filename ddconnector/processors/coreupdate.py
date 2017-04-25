@@ -5,12 +5,12 @@ from collections import defaultdict
 from ddconnector.decoder import encode
 
 
-async def softupdate(protocol, msg):
+async def coreupdate(protocol, msg):
     """
-    门禁主机APK更新
+    门禁主机固件更新
     """
     if 'isClient' in msg:
-        logging.info("收到APK更新请求！guid: %s", msg['guid'])
+        logging.info("收到固件更新请求！guid: %s", msg['guid'])
         request_message = {'cmd': 'softUpdate',
                            'request_id': msg['guid'],
                            'response_params': 
