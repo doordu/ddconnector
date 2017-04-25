@@ -12,7 +12,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     platforms='all',
-    data_files =[
+    data_files=[
         ('/etc', ['ddconnector.ini'])
     ],
     install_requires=[
@@ -35,5 +35,5 @@ setup(
         'console_scripts': [
             'ddconnector = scripts.ddconnector_script:main'
         ]
-    }
+    },
 )
