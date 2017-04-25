@@ -65,6 +65,7 @@ class Protocol(asyncio.Protocol):
             logging.error("异常: {}".format(error))
         else:
             logging.info("关闭连接")
+        super().connection_lost(error)
             
     def eof_received(self):
         if self.transport.can_write_eof():

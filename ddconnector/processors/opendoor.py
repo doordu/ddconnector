@@ -41,6 +41,7 @@ async def opendoor(protocol, msg):
         # 根据之前的门禁guid => [等候者列表]关系进行回包
         for transport in waiters[msg['guid']]:
             transport.write(response_message)
+            transport.close()
         
         try:
             del waiters[msg['guid']]
