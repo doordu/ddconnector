@@ -21,5 +21,6 @@ async def softupdate(protocol, msg):
                            'response_type': False,
                            'token_id': ''}
         request_message = encode(request_message)
+        protocol.close()
         protocol.server.transports[msg['guid']].write(request_message)
     
