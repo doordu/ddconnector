@@ -12,6 +12,9 @@ setup(
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     platforms='all',
+    data_files =[
+        ('/etc', ['ddconnector.ini'])
+    ],
     install_requires=[
         'uvloop',
         'aioredis',
