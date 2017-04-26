@@ -7,6 +7,7 @@ from .coreupdate import coreupdate
 from .randompwd import randompwd
 from .cardnew import cardnew
 from .adv import adv
+from .pushfaces import pushfaces
 
 processors = {
     'heart_beat': heartbeat,                        # 心跳
@@ -18,6 +19,7 @@ processors = {
     'randomPwd': randompwd,                         # 开门密码
     'cardNew': cardnew,                             # 黑白名单
     'advertisement': adv,                           # 广告下发
+    'pullFacesList': pushfaces,                     # 下发人脸
     'proxy': lambda *args: None,
     'Prompt': lambda *args: None,           
 }
