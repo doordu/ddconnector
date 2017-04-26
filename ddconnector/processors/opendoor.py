@@ -23,9 +23,17 @@ async def opendoor(protocol, msg):
                            'response_type': False,
                            'token_id': ''}
         request_message = encode(request_message)
-        protocol.server.transports[msg['guid']].write(request_message)
-        # 建立guid => [等待回复者列表]建立关系，方便门禁返回时回复
-        waiters[msg['guid']].append(protocol.transport)
+        try:
+            protocol.server.transports[msg['guid']].write(request_message)
+        except KeyError:
+            logging.info("guid: %s 不在线，下发命令%s失败！", msg['guid'], msg['cmd'])
+            response_message = {'cmd': 'open_door', 'status': -1, 'message': '门禁主机不在线'}
+            response_message = encode(response_message)
+            protocol.transport.write(response_message)
+            protocol.transport.close()
+        else:    
+            # 建立guid => [等待回复者列表]建立关系，方便门禁返回时回复
+            waiters[msg['guid']].append(protocol.transport)
     else:
         # 收到门禁开门回复
         logging.info("收到开门回复！guid: %s", msg['guid'])
