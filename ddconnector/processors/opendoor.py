@@ -27,12 +27,12 @@ async def opendoor(protocol, msg):
         try:
             protocol.server.transports[msg['guid']].write(request_message)
         except KeyError:
+            protocol.server.raven.captureException()
             logging.info("guid: %s 不在线，下发命令开门指令失败！", msg['guid'])
             response_message = {'cmd': 'open_door', 'status': -1, 'message': '门禁主机不在线'}
             response_message = encode(response_message)
             protocol.transport.write(response_message)
             protocol.transport.close()
-            raise GuidDisonnected()
         else:    
             # 建立guid => [等待回复者列表]建立关系，方便门禁返回时回复
             waiters[msg['guid']].append(protocol.transport)

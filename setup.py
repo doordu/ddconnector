@@ -19,6 +19,7 @@ setup(
         'uvloop',
         'aioredis',
         'raven',
+        'aiohttp',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

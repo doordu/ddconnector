@@ -53,9 +53,6 @@ class Protocol(asyncio.Protocol):
         except UnkownCommandException:
             logging.error("%r => 未知命令！", msg)
             self.server.raven.captureException()
-        except GuidDisonnected:
-            logging.error("%r => GUID未连接！", msg)
-            self.server.raven.captureException()
         except FormatException:
             logging.error("%r => 数据结构错误！", msg)
             self.server.raven.captureException()
