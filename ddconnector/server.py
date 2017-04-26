@@ -4,9 +4,10 @@ import uvloop
 from ddconnector.protocol import Protocol
 
 class Server:
-    def __init__(self, config):
+    def __init__(self, config, raven):
         self.config = config
         self.server_address = (config['general']['server_ip'], config['general']['listen_port'])
+        self.raven = raven
         self.transports = {}
         self.loop = uvloop.new_event_loop()
         factory = self.loop.create_server(

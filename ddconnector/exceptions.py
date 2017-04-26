@@ -17,3 +17,10 @@ class UnkownCommandException(Exception):
     """
     未知命令
     """
+    pass
+    
+class GuidDisonnected(Exception):
+    """
+    设置未连接
+    """
+    pass

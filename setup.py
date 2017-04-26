@@ -18,6 +18,7 @@ setup(
     install_requires=[
         'uvloop',
         'aioredis',
+        'raven',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -25,9 +26,7 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: POSIX',
         'Operating System :: MacOS',
-        'Operating System :: Microsoft :: Windows',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
         'Topic :: Communications',
         'Topic :: Internet'        
     ],

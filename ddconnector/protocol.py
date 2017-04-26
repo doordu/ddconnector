@@ -4,7 +4,8 @@ import logging
 from ddconnector.decoder import decode, encode
 from ddconnector.exceptions import (DecodeException, 
                                     UnkownCommandException,
-                                    FormatException)
+                                    FormatException,
+                                    GuidDisonnected)
 from ddconnector.processors import processors
 
 DELIMITER = b'*'
@@ -48,12 +49,19 @@ class Protocol(asyncio.Protocol):
             asyncio.ensure_future(task)
         except DecodeException:
             logging.error("%r => base64解码失败！", msg)
+            self.server.raven.captureException()
         except UnkownCommandException:
             logging.error("%r => 未知命令！", msg)
+            self.server.raven.captureException()
+        except GuidDisonnected:
+            logging.error("%r => GUID未连接！", msg)
+            self.server.raven.captureException()
         except FormatException:
             logging.error("%r => 数据结构错误！", msg)
+            self.server.raven.captureException()
         except KeyError:
-            logging.error("%r => 未知命令！", msg)
+            logging.error("%r =>数据结构中没有cmd键值！", msg)
+            self.server.raven.captureException()
             
     def connection_lost(self, error):
         logging.info("收到断开连接请求！guid: %s", self.guid)
