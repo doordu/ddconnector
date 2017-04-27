@@ -18,7 +18,6 @@ setup(
     install_requires=[
         'uvloop',
         'aioredis',
-        'raven',
         'raven-aiohttp',
     ],
     classifiers=[
