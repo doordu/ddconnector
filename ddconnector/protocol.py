@@ -44,7 +44,7 @@ class Protocol(asyncio.Protocol):
         '''
         try:
             msg = decode(msg)
-            processor = processors[msg['cmd']]
+            processor = processors.get(msg['cmd']) or processors.get('magic')
             task = self.server.loop.create_task(processor(self, msg))
             asyncio.ensure_future(task)
         except DecodeException:
@@ -55,9 +55,6 @@ class Protocol(asyncio.Protocol):
             self.server.raven.captureException()
         except FormatException:
             logging.error("%r => 数据结构错误！", msg)
-            self.server.raven.captureException()
-        except KeyError:
-            logging.error("%r =>数据结构中没有cmd键值！", msg)
             self.server.raven.captureException()
             
     def connection_lost(self, error):
