@@ -1,5 +1,6 @@
 import logging
 import json
+import asyncio
 from collections import defaultdict
 
 from ddconnector.decoder import encode
@@ -7,7 +8,8 @@ from ddconnector.exceptions import GuidDisonnected
 
 waiters = defaultdict(list)
 
-async def opendoor(protocol, msg):
+@asyncio.coroutine
+def opendoor(protocol, msg):
     """
     处理开门
     """

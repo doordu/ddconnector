@@ -1,10 +1,12 @@
 import logging
 import json
+import asyncio
 
 from ddconnector.decoder import encode
 
 
-async def magic(protocol, msg):
+@asyncio.coroutine
+def magic(protocol, msg):
     """
     处理通用指令
     """

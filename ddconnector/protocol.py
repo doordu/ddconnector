@@ -4,8 +4,7 @@ import logging
 from ddconnector.decoder import decode, encode
 from ddconnector.exceptions import (DecodeException, 
                                     UnkownCommandException,
-                                    FormatException,
-                                    GuidDisonnected)
+                                    FormatException)
 from ddconnector.processors import processors
 
 DELIMITER = b'*'
