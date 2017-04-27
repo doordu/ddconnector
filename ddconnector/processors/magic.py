@@ -21,7 +21,7 @@ async def magic(protocol, msg):
                            'response_type': False,
                            'token_id': ''}
         request_message = encode(request_message)
-        protocol.close()
+        protocol.transport.close()
         protocol.server.transports[msg['guid']].write(request_message)
     else:
         # 收到回复
