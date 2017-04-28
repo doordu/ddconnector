@@ -8,8 +8,10 @@ class Server:
         self.config = config
         self.server_address = (config['general']['server_ip'], config['general']['listen_port'])
         self.raven = raven
+        self.redis_pool = None
         self.transports = {}
         self.loop = uvloop.new_event_loop()
+        self.redis_pool = 
         factory = self.loop.create_server(
                     lambda:Protocol(self),  *self.server_address)
         self.server = self.loop.run_until_complete(factory)
