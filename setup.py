@@ -32,7 +32,8 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'ddconnector = scripts.ddconnector_script:main'
+            'ddconnector = scripts.ddconnector_script:main',
+            'ddconnector_debug = scripts.ddconnector_debug_script:main'
         ]
     },
 )

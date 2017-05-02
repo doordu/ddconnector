@@ -26,11 +26,9 @@ ddconnector
 
 打开DEBUG级别日志::
 
-    telnet localhost 9501
-    eyJjbWQiOiAiZGVidWciLCAiZW5hYmxlZCI6IHRydWV9*
+    ddconnector_debug 1
 
 关闭DEBUG级别日志::
 
-    telnet localhost 9501
-    eyJjbWQiOiAiZGVidWciLCAiZW5hYmxlZCI6IGZhbHNlfQ==*
+    ddconnector_debug 0
 
