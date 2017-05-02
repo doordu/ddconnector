@@ -28,7 +28,7 @@ def heartbeat(protocol, msg):
         guid = msg['guid']
         version = msg['version']
         msg['fd'] = 0
-        msg['server_host'] = protocol.server.config['general']['server_ip']
+        msg['server_host'] = protocol.server.config['general']['lan_ip']
         msg['server_port'] = protocol.server.config['general']['listen_port']
         address = protocol.transport.get_extra_info('peername')
         protocol.server.transports[guid] = protocol.transport
