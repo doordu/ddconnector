@@ -9,7 +9,8 @@ ddconnector
 安装
 -----------
 
-::
+安装指令::
+
     python3.6 -m venv venv
     source venv/bin/active
     python setup.py install
