@@ -5,4 +5,5 @@ venv/
 dist/
 thirdparts/
 ddconnector.log
+ddconnector.log.*
 __pycache__

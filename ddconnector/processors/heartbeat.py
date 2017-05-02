@@ -5,7 +5,6 @@ import aioredis
 
 from ddconnector.decoder import encode
 from ddconnector.exceptions import FormatException
-from uvloop.dns import proto
         
 
 @asyncio.coroutine
@@ -35,9 +34,10 @@ def heartbeat(protocol, msg):
         protocol.server.transports[guid] = protocol.transport
         protocol.guid = guid
         logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
-        redis = yield from connect(protocol)
+        pool = yield from connect(protocol)
         redis_key = '{}_heart_beta'.format(guid)
-        yield from redis.set(redis_key, json.dumps(msg), expire=int(protocol.server.config['general']['heartbeat_expires']))
+        with (yield from pool) as conn:
+            yield from conn.set(redis_key, json.dumps(msg), expire=int(protocol.server.config['general']['heartbeat_expires']))
         
         response = {'request_id': guid, 
                     'cmd': 'heart_beat'}
