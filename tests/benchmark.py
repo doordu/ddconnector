@@ -20,7 +20,7 @@ def heart_beat(loop):
 start = time.time()
 
 loop = asyncio.get_event_loop()
-tasks = [heart_beat(loop) for i in range(10000)]
+tasks = [heart_beat(loop) for i in range(1000)]
 loop.run_until_complete(asyncio.wait(tasks))
 loop.close()
 
