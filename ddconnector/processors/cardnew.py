@@ -15,7 +15,7 @@ def cardnew(protocol, msg):
     """
     if 'isClient' in msg:
         # 下发黑白名单
-        logging.info("收到开门请求！guid: %s", msg['guid'])
+        logging.info("收到下发黑白名单请求！guid: %s", msg['guid'])
         request_message = {'cmd': 'cardNew',
                            'request_id': msg['guid'],
                            'response_params': 
