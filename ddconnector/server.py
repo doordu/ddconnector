@@ -6,7 +6,7 @@ from ddconnector.protocol import Protocol
 class Server:
     def __init__(self, config, raven):
         self.config = config
-        self.server_address = (config['general']['server_ip'], config['general']['listen_port'])
+        self.server_address = (config['general']['server_ip'], config.getint('general', 'listen_port'))
         self.raven = raven
         self.redis_pool = None
         self.transports = {}
