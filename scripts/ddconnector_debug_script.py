@@ -31,11 +31,16 @@ def debug(loop, ip='localhost', port=9501, enabled=False):
     
 
 def main():
-    fileConfig('/etc/ddconnector.ini')
+    config_file = '/etc/ddconnector.ini'
+    
+    if len(sys.argv) > 2:
+        config_file = sys.argv[2]
+    
+    fileConfig(config_file)
     
     client = Client('https://ca252a631c4b437cac81ea0ad3e545ff:d31c83bc53b644138831c7c7d41ba661@sdlog.doordu.com:8205/17', transport=AioHttpTransport)
     config = configparser.ConfigParser()
-    config.read('/etc/ddconnector.ini')
+    config.read(config_file)
     
     try:
         enabled = bool(int(sys.argv[1]))
