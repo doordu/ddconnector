@@ -13,6 +13,8 @@ def connect(protocol):
         protocol.server.redis_pool = yield from aioredis.create_pool(
             (protocol.server.config['redis']['host'], protocol.server.config['redis']['port']), 
             password=protocol.server.config['redis']['password'], 
+            minsize=protocol.server.config.getint('redis', 'pool_min_size'),
+            maxsize=protocol.server.config.getint('redis', 'pool_max_size'),
             loop=protocol.server.loop)
     return protocol.server.redis_pool
         
