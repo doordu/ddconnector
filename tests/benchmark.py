@@ -10,7 +10,7 @@ def heart_beat(loop):
     d = {"guid":str(uuid.uuid4()),"cmd":"heart_beat","version":"5.8.000.0"}
     message = json.dumps(d)
     message = base64.encodebytes(message.encode('utf_8')) + b'*'
-    reader, writer = yield from asyncio.open_connection('10.0.0.72', 9501,
+    reader, writer = yield from asyncio.open_connection('localhost', 9501,
                                                         loop=loop)
     writer.write(message)
     data = yield from reader.read(1024)
