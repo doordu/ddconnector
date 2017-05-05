@@ -36,12 +36,11 @@ def heartbeat(protocol, msg):
         msg['client_host'], msg['client_port'] = address
         protocol.server.transports[guid] = protocol.transport
         protocol.guid = guid
-        logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
+        #logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
         pool = yield from connect(protocol)
         redis_key = '{}_heart_beta'.format(guid)
         with (yield from pool) as conn:
             yield from conn.set(redis_key, json.dumps(msg), expire=protocol.server.config.getint('general', 'heartbeat_expires'))
-        
         response = {'request_id': guid, 
                     'cmd': 'heart_beat'}
         response = encode(response)

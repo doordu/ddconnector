@@ -44,8 +44,7 @@ class Protocol(asyncio.Protocol):
         try:
             msg = decode(msg)
             processor = processors.get(msg['cmd']) or processors.get('magic')
-            task = self.server.loop.create_task(processor(self, msg))
-            asyncio.ensure_future(task)
+            self.server.loop.create_task(processor(self, msg))
         except DecodeException:
             logging.error("%r => base64解码失败！", msg)
             self.server.raven.captureException()
@@ -62,10 +61,10 @@ class Protocol(asyncio.Protocol):
             del self.server.transports[self.guid]
         except KeyError:
             pass
-        if error:
-            logging.error("异常: {}".format(error))
-        else:
-            logging.info("关闭连接")
+#         if error:
+#             logging.info("异常: {}".format(error))
+#         else:
+#             logging.info("关闭连接")
         super().connection_lost(error)
             
     def eof_received(self):
