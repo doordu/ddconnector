@@ -37,22 +37,8 @@ def heartbeat(protocol, msg):
         address = protocol.transport.get_extra_info('peername')
         msg['client_host'], msg['client_port'] = address
         
-        current_time = time.time()
-        
-        if not protocol.guid is None:
-            # 之前发过心跳
-            last_transport = protocol.server.transports[guid][0]
-            if last_transport == protocol.transport:
-                # 还是那个连接
-                protocol.server.transports[guid][1] = current_time
-            else:
-                # 关闭之前连接
-                last_transport.close()
-                protocol.server.transports[guid] = (protocol.transport, current_time)
-        else:   
-            # 首次心跳     
-            protocol.guid = guid
-            protocol.server.transports[guid] = (protocol.transport, current_time)
+        protocol.guid = guid
+        protocol.server.transports[guid] = (protocol.transport, time.time())
         
         #logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
         pool = yield from connect(protocol)
