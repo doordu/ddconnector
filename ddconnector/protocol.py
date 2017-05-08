@@ -14,7 +14,7 @@ class Protocol(asyncio.Protocol):
     
     def __init__(self, server):
         self.server = server
-        self.guid = ''
+        self.guid = None
         self._buffer = b''
     
     def connection_made(self, transport):

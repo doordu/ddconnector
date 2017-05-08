@@ -14,7 +14,7 @@ def heart_beat(loop):
                                                         loop=loop)
     writer.write(message)
     data = yield from reader.read(1024)
-    #print(data)
+    print(data)
     #writer.close()
        
 start = time.time()
