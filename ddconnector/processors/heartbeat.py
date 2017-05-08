@@ -1,6 +1,8 @@
 import logging
 import json
 import asyncio
+import time
+
 import aioredis
 
 from ddconnector.decoder import encode
@@ -34,7 +36,12 @@ def heartbeat(protocol, msg):
         msg['server_port'] = protocol.server.config['general']['listen_port']
         address = protocol.transport.get_extra_info('peername')
         msg['client_host'], msg['client_port'] = address
-        protocol.server.transports[guid] = protocol.transport
+        try:
+            if protocol.server.transports[guid][0] != protocol.transport:
+                protocol.server.transports[guid][0].close()
+        except Exception:
+            pass
+        protocol.server.transports[guid] = (protocol.transport, time.time())
         protocol.guid = guid
         #logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
         pool = yield from connect(protocol)
