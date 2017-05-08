@@ -26,9 +26,16 @@ ddconnector
 
 打开DEBUG级别日志::
 
-    ddconnector_debug 1
+    ddconnector_cli debug 1
 
 关闭DEBUG级别日志::
 
-    ddconnector_debug 0
+    ddconnector_cli debug 0
+    
+查看当前门禁设备连接数
+
+    ddconnector_cli total
+    
+启动gc回收
+    ddconnector_cli gc
 

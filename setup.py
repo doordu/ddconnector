@@ -19,6 +19,7 @@ setup(
         'uvloop',
         'aioredis',
         'raven-aiohttp',
+        'click',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
@@ -33,7 +34,6 @@ setup(
     entry_points={
         'console_scripts': [
             'ddconnector = scripts.ddconnector_script:main',
-            'ddconnector_debug = scripts.ddconnector_debug_script:main',
             'ddconnector_cli = scripts.ddconnector_cli_script:main'
         ]
     },
