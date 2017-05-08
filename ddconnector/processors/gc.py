@@ -11,21 +11,21 @@ def gc(protocol, msg):
     garbage collection
     """
     now = time.time()
-    before_gc_total = len(protocol.server.transports)
+    before_gc_total = len(protocol.server.protocols)
     
-    for guid, (transport, last_ping) in protocol.server.transports.items():
-        if now - last_ping > EXPIRED_DURATION:
+    for p in protocol.server.protocols:
+        if now - p.last_time > EXPIRED_DURATION:
             try:
-                transport.close() 
+                p.transport.close() 
             except Exception:
                 pass
             
             try:
-                del protocol.server.transports['guid']
+                del protocol.server.protocols['guid']
             except KeyError:
                 pass
             
-    after_gc_total = len(protocol.server.transports)
+    after_gc_total = len(protocol.server.protocols)
     
     
     response = "垃圾回收结束！{0:d} -> {1:d}".format(before_gc_total, after_gc_total)    

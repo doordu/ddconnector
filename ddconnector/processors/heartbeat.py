@@ -38,7 +38,8 @@ def heartbeat(protocol, msg):
         msg['client_host'], msg['client_port'] = address
         
         protocol.guid = guid
-        protocol.server.transports[guid] = (protocol.transport, time.time())
+        protocol.last_time = time.time()
+        protocol.server.protocols[guid] = protocol
         
         #logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
         pool = yield from connect(protocol)

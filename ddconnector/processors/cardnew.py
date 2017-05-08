@@ -27,7 +27,7 @@ def cardnew(protocol, msg):
                            'token_id': ''}
         request_message = encode(request_message)
         try:
-            protocol.server.transports[msg['guid']][0].write(request_message)
+            protocol.server.protocols[msg['guid']].transport.write(request_message)
         except KeyError:
             protocol.server.raven.captureException()
             logging.error("guid: %s 不在线，下发黑白名单指令失败！", msg['guid'])
@@ -37,7 +37,7 @@ def cardnew(protocol, msg):
             protocol.transport.close()
         else:    
             # 建立guid => [等待回复者列表]建立关系，方便门禁返回时回复
-            waiters[msg['guid']].append(protocol.transport)
+            waiters[msg['guid']].append(protocol)
     else:
         # 收到门禁开门回复
         logging.info("收到下发黑白名单回复！guid: %s", msg['guid'])
@@ -51,9 +51,9 @@ def cardnew(protocol, msg):
                              'token_id': ''}
         response_message = encode(response_message)
         # 根据之前的门禁guid => [等候者列表]关系进行回包
-        for transport in waiters[msg['guid']]:
-            transport.write(response_message)
-            transport.close()
+        for waiter in waiters[msg['guid']]:
+            waiter.transport.write(response_message)
+            waiter.transport.close()
         
         try:
             del waiters[msg['guid']]

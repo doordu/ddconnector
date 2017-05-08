@@ -10,11 +10,12 @@ from ddconnector.processors import processors
 DELIMITER = b'*'
 
 class Protocol(asyncio.Protocol):
-    __slots__ = ('server', 'guid', '_buffer', 'transport')
+    __slots__ = ('server', 'guid', '_buffer', 'transport', 'last_time')
     
     def __init__(self, server):
         self.server = server
         self.guid = None
+        self.last_time = None
         self._buffer = b''
     
     def connection_made(self, transport):
