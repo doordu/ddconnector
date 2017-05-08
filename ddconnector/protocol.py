@@ -57,16 +57,15 @@ class Protocol(asyncio.Protocol):
             self.server.raven.captureException()
             
     def connection_lost(self, error):
-        logging.info("收到断开连接请求！guid: %s", self.guid)
+        logging.info("收到断开连接请求！guid: %s, %s", self.guid, self.transport.get_extra_info('peername'))
         try:
-            del self.server.transports[self.guid]
+            del self.server.protocols[self.guid]
         except KeyError:
             pass
 #         if error:
 #             logging.info("异常: {}".format(error))
 #         else:
 #             logging.info("关闭连接")
-        super().connection_lost(error)
             
     def eof_received(self):
         if self.transport.can_write_eof():

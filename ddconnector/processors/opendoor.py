@@ -15,7 +15,7 @@ def opendoor(protocol, msg):
     """
     if 'isClient' in msg:
         # 发起开门
-        logging.info("收到开门请求！guid: %s", msg['guid'])
+        logging.info("收到开门请求！guid: %s, %s", msg['guid'], protocol.transport.get_extra_info('peername'))
         request_message = {'cmd': 'open_door',
                            'request_id': msg['guid'],
                            'response_params': 
