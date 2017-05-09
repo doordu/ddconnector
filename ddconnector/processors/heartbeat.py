@@ -50,7 +50,7 @@ def heartbeat(protocol, msg):
         protocol.guid = guid
         protocol.server.doors[guid] = protocol
         
-        logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
+        #logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
         pool = yield from connect(protocol)
         redis_key = '{}_heart_beta'.format(guid)
         with (yield from pool) as conn:

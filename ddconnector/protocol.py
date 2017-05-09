@@ -49,12 +49,7 @@ class Protocol(asyncio.Protocol):
         except DecodeException:
             logging.error("%r => base64解码失败！", msg)
             self.server.raven.captureException()
-        except UnkownCommandException:
-            logging.error("%r => 未知命令！", msg)
-            self.server.raven.captureException()
-        except FormatException:
-            logging.error("%r => 数据结构错误！", msg)
-            self.server.raven.captureException()
+            self.transport.close()
             
 #    def connection_lost(self, error):
 #        logging.info("关闭连接！guid: %s, %s", self.guid, self.transport.get_extra_info('peername'))
