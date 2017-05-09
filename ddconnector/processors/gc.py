@@ -4,7 +4,7 @@ import asyncio
 import time
 import gc
 
-EXPIRED_SECONDS = 60 * 5  
+EXPIRED_SECONDS = 60 * 1  
 
 @asyncio.coroutine
 def gc(protocol, msg):
@@ -15,7 +15,7 @@ def gc(protocol, msg):
     before_gc_total = len(protocol.server.doors)
     
     for p in protocol.server.doors.values():
-        if now - p.last_time > EXPIRED_SECONDS:
+        if self.last_time != 0 and now - p.last_time > EXPIRED_SECONDS:
             p.transport.close()
             
     after_gc_total = len(protocol.server.doors)
