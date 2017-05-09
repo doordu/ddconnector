@@ -4,7 +4,6 @@ import asyncio
 from collections import defaultdict
 
 from ddconnector.decoder import encode
-from ddconnector.exceptions import GuidDisonnected
 
 waiters = defaultdict(list)
 
