@@ -26,7 +26,7 @@ def opendoor(protocol, msg):
                            'token_id': ''}
         request_message = encode(request_message)
         try:
-            protocol.server.protocols[msg['guid']].transport.write(request_message)
+            protocol.server.doors[msg['guid']].transport.write(request_message)
         except KeyError:
             protocol.server.raven.captureException()
             logging.info("guid: %s 不在线，下发命令开门指令失败！", msg['guid'])

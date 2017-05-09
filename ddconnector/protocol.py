@@ -10,12 +10,12 @@ from ddconnector.processors import processors
 DELIMITER = b'*'
 
 class Protocol(asyncio.Protocol):
-    __slots__ = ('server', 'guid', '_buffer', 'transport', 'last_time')
+    __slots__ = ('server', 'guid', '_buffer', 'transport')
     
     def __init__(self, server):
         self.server = server
         self.guid = None
-        self.last_time = None
+        self.address = None
         self._buffer = b''
     
     def connection_made(self, transport):
@@ -56,12 +56,12 @@ class Protocol(asyncio.Protocol):
             logging.error("%r => 数据结构错误！", msg)
             self.server.raven.captureException()
             
-    def connection_lost(self, error):
-        #logging.info("收到断开连接请求！guid: %s, %s", self.guid, self.transport.get_extra_info('peername'))
-        try:
-            del self.server.protocols[self.guid]
-        except KeyError:
-            pass
+#    def connection_lost(self, error):
+#        logging.info("关闭连接！guid: %s, %s", self.guid, self.transport.get_extra_info('peername'))
+#         try:
+#             del self.server.doors[self.guid]
+#         except KeyError:
+#             pass
 #         if error:
 #             logging.info("异常: {}".format(error))
 #         else:

@@ -37,11 +37,20 @@ def heartbeat(protocol, msg):
         address = protocol.transport.get_extra_info('peername')
         msg['client_host'], msg['client_port'] = address
         
-        protocol.guid = guid
-        protocol.last_time = time.time()
-        protocol.server.protocols[guid] = protocol
+        try:
+            # 实验性回收旧连接
+            last_protocol = protocol.server.doors[guid]
+            if last_protocol != protocol:
+                logging.info("回收旧连接！guid: %s, address: %s", guid, last_protocol.transport.get_extra_info('peername'))
+                last_protocol.transport.close()
+                del protocol.server.doors[guid]
+        except Exception:
+            pass
         
-        #logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
+        protocol.guid = guid
+        protocol.server.doors[guid] = protocol
+        
+        logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
         pool = yield from connect(protocol)
         redis_key = '{}_heart_beta'.format(guid)
         with (yield from pool) as conn:
