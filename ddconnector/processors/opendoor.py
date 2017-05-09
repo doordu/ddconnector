@@ -4,8 +4,6 @@ import asyncio
 
 from ddconnector.decoder import encode
 
-waiters = dict()
-
 @asyncio.coroutine
 def opendoor(protocol, msg):
     """
@@ -27,7 +25,7 @@ def opendoor(protocol, msg):
         try:
             protocol.server.doors[msg['guid']].transport.write(request_message)    
             # 建立guid => [等待回复者列表]建立关系，方便门禁返回时回复
-            waiters[msg['guid']] = protocol
+            protocol.server.waiters[msg['guid']] = protocol
         except KeyError:
             logging.info("guid: %s 不在线，下发命令开门指令失败！", msg['guid'])
             response_message = {'cmd': 'open_door', 'status': -1, 'message': '门禁主机不在线'}
@@ -48,8 +46,8 @@ def opendoor(protocol, msg):
         response_message = encode(response_message)
         # 根据之前的门禁guid => [等候者列表]关系进行回包
         try:
-            waiters[msg['guid']].transport.write(response_message)
-            waiters[msg['guid']].transport.close()
-            del waiters[msg['guid']]
+            protocol.server.waiters[msg['guid']].transport.write(response_message)
+            protocol.server.waiters[msg['guid']].transport.close()
+            del protocol.server.waiters[msg['guid']]
         except KeyError:
-            logging.info("之前发送请求关联关系不存在！guid: %s", msg['guid'])
+            logging.info("开门回复之前发送请求关联关系不存在！guid: %s", msg['guid'])

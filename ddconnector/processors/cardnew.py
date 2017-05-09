@@ -4,9 +4,7 @@ import asyncio
 from collections import defaultdict
 
 from ddconnector.decoder import encode
-from ddconnector.exceptions import GuidDisonnected
 
-waiters = defaultdict(list)
 
 @asyncio.coroutine
 def cardnew(protocol, msg):
@@ -28,6 +26,7 @@ def cardnew(protocol, msg):
         request_message = encode(request_message)
         try:
             protocol.server.doors[msg['guid']].transport.write(request_message)
+            protocol.server.waiters[msg['guid']] = protocol
         except KeyError:
             #protocol.server.raven.captureException()
             logging.error("guid: %s 不在线，下发黑白名单指令失败！", msg['guid'])
@@ -35,9 +34,6 @@ def cardnew(protocol, msg):
             response_message = encode(response_message)
             protocol.transport.write(response_message)
             protocol.transport.close()
-        else:    
-            # 建立guid => [等待回复者列表]建立关系，方便门禁返回时回复
-            waiters[msg['guid']].append(protocol)
     else:
         # 收到门禁开门回复
         logging.info("收到下发黑白名单回复！guid: %s", msg['guid'])
@@ -51,11 +47,10 @@ def cardnew(protocol, msg):
                              'token_id': ''}
         response_message = encode(response_message)
         # 根据之前的门禁guid => [等候者列表]关系进行回包
-        for waiter in waiters[msg['guid']]:
-            waiter.transport.write(response_message)
-            waiter.transport.close()
-        
+            
         try:
-            del waiters[msg['guid']]
+            protocol.server.waiters[msg['guid']].transport.write(response_message)
+            protocol.server.waiters[msg['guid']].transport.close()
+            del protocol.server.waiters[msg['guid']]
         except KeyError:
-            pass
+            logging.info("黑白名单回复之前发送请求关联关系不存在！guid: %s", msg['guid'])
