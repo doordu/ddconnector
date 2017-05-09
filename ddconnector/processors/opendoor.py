@@ -1,11 +1,10 @@
 import logging
 import json
 import asyncio
-from collections import defaultdict
 
 from ddconnector.decoder import encode
 
-waiters = defaultdict(list)
+waiters = dict()
 
 @asyncio.coroutine
 def opendoor(protocol, msg):
@@ -26,16 +25,15 @@ def opendoor(protocol, msg):
                            'token_id': ''}
         request_message = encode(request_message)
         try:
-            protocol.server.doors[msg['guid']].transport.write(request_message)
+            protocol.server.doors[msg['guid']].transport.write(request_message)    
+            # 建立guid => [等待回复者列表]建立关系，方便门禁返回时回复
+            waiters[msg['guid']] = protocol
         except KeyError:
             logging.info("guid: %s 不在线，下发命令开门指令失败！", msg['guid'])
             response_message = {'cmd': 'open_door', 'status': -1, 'message': '门禁主机不在线'}
             response_message = encode(response_message)
             protocol.transport.write(response_message)
             protocol.transport.close()
-        else:    
-            # 建立guid => [等待回复者列表]建立关系，方便门禁返回时回复
-            waiters[msg['guid']].append(protocol)
     else:
         # 收到门禁开门回复
         logging.info("收到开门回复！guid: %s", msg['guid'])
@@ -49,11 +47,9 @@ def opendoor(protocol, msg):
                              'token_id': ''}
         response_message = encode(response_message)
         # 根据之前的门禁guid => [等候者列表]关系进行回包
-        for waiter in waiters[msg['guid']]:
-            waiter.transport.write(response_message)
-            waiter.transport.close()
-        
         try:
-            waiters[msg['guid']].clear()
+            waiters[msg['guid']].transport.write(response_message)
+            waiters[msg['guid']].transport.close()
+            del waiters[msg['guid']]
         except KeyError:
-            pass
+            logging.info("之前发送请求关联关系不存在！guid: %s", msg['guid'])

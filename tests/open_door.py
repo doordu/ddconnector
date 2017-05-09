@@ -7,7 +7,7 @@ import time
 
 @asyncio.coroutine
 def open_door(loop):
-    d = {'fd': 0, 'cmd': 'open_door', 'from_id': 0, 'guid': 'DD302WI201512A-1355', 'isClient': True, 'time': '2017-05-09 15:36:08', 'data': '[]'}
+    d = {'fd': 0, 'cmd': 'open_door', 'from_id': 0, 'guid': 'DD302WI201512A-1355', 'isClient': True, 'time': '2017-05-09 15:36:08', 'data': '{"room_id": 0}'}
     message = json.dumps(d)
     message = base64.encodebytes(message.encode('utf_8')) + b'*'
     reader, writer = yield from asyncio.open_connection('localhost', 9501,

@@ -10,6 +10,7 @@ class Server:
         self.raven = raven
         self.redis_pool = None
         self.doors = {}
+        self.waiters = {}
         self.loop = uvloop.new_event_loop()
         factory = self.loop.create_server(
                     lambda:Protocol(self),  *self.server_address)
