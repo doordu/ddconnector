@@ -48,6 +48,7 @@ def heartbeat(protocol, msg):
             pass
         
         protocol.guid = guid
+        protocol.last_time = time.time()
         protocol.server.doors[guid] = protocol
         
         #logging.info("收到心跳信息！guid: %s, address: %s" % (guid, address))
