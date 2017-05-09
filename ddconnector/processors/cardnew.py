@@ -29,7 +29,7 @@ def cardnew(protocol, msg):
         try:
             protocol.server.doors[msg['guid']].transport.write(request_message)
         except KeyError:
-            protocol.server.raven.captureException()
+            #protocol.server.raven.captureException()
             logging.error("guid: %s 不在线，下发黑白名单指令失败！", msg['guid'])
             response_message = {'cmd': 'cardNew', 'status': -1, 'message': '门禁主机不在线'}
             response_message = encode(response_message)
