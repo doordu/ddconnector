@@ -27,7 +27,7 @@ def magic(protocol, msg):
         try:
             protocol.server.doors[msg['guid']].transport.write(request_message)
         except KeyError:
-            protocol.server.raven.captureException()
+            #protocol.server.raven.captureException()
             logging.info("guid: %s 不在线，下发命令开门指令失败！", msg['guid'])
     else:
         # 收到回复
