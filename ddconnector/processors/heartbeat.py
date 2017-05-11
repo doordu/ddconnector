@@ -86,8 +86,6 @@ def send_unread_command(protocol, pool, guid):
             except KeyError:
                 protocol.server.raven.captureException()
                 logging.info("guid: %s 不在线，下发指令失败！", guid)
-    else:
-        logging.info("guid: %s 没有未读指令！", guid)
 
 
 
