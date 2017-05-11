@@ -34,7 +34,8 @@ setup(
     entry_points={
         'console_scripts': [
             'ddconnector = scripts.ddconnector_script:main',
-            'ddconnector_cli = scripts.ddconnector_cli_script:main'
+            'ddconnector_cli = scripts.ddconnector_cli_script:main',
+            'ddconnector_gc = scripts.ddconnector_gc_script:main'
         ]
     },
 )

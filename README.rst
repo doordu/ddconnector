@@ -32,10 +32,18 @@ ddconnector
 
     ddconnector_cli debug 0
     
-查看当前门禁设备连接数
+查看当前门禁设备连接数::
 
     ddconnector_cli total
     
-启动gc回收
+手动启动gc回收::
+
     ddconnector_cli gc
 
+
+运行
+-------------
+
+``ddconnector``主程序
+
+``ddconnector_gc``连接回收
