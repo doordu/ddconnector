@@ -20,6 +20,7 @@ setup(
         'aioredis',
         'raven-aiohttp',
         'click',
+        'schedule',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',
