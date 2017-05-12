@@ -66,26 +66,27 @@ def heartbeat(protocol, msg):
 
 @asyncio.coroutine
 def send_unread_command(protocol, pool, guid):
+    commands = None
     with (yield from pool) as conn:
-        list = yield from conn.smembers('ddconnector_unread_command_for_' + guid)
-    if len(list) != 0:
-        for command in list:
-            logging.info("下发未读指令[%s]！guid: %s", command, guid)
-            request_message = {'cmd': bytes.decode(command),
-                               'request_id': guid,
-                               'response_params':
-                                   {'data': [],
-                                    'message': '',
-                                    'success': True,
-                                    'totalCount': '0'},
-                               'response_type': False,
-                               'token_id': ''}
-            request_message = encode(request_message)
-            try:
-                protocol.server.doors[guid].transport.write(request_message)
-            except KeyError:
-                protocol.server.raven.captureException()
-                logging.info("guid: %s 不在线，下发指令失败！", guid)
+        commands = yield from conn.smembers('ddconnector_unread_command_for_' + guid)
+
+    for command in commands:
+        logging.info("下发未读指令[%s]！guid: %s", command, guid)
+        request_message = {'cmd': command.decode('utf-8'),
+                           'request_id': guid,
+                           'response_params':
+                               {'data': [],
+                                'message': '',
+                                'success': True,
+                                'totalCount': '0'},
+                           'response_type': False,
+                           'token_id': ''}
+        request_message = encode(request_message)
+        try:
+            protocol.server.doors[guid].transport.write(request_message)
+        except KeyError:
+            protocol.server.raven.captureException()
+            logging.info("guid: %s 不在线，下发指令失败！", guid)
 
 
 
