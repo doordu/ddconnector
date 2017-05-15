@@ -21,6 +21,7 @@ setup(
         'raven-aiohttp',
         'click',
         'schedule',
+        'ujson',
     ],
     classifiers=[
         'Development Status :: 3 - Alpha',

@@ -1,5 +1,5 @@
 import logging
-import json
+import ujson
 import asyncio
 from collections import defaultdict
 
@@ -17,7 +17,7 @@ def cardnew(protocol, msg):
         request_message = {'cmd': 'cardNew',
                            'request_id': msg['guid'],
                            'response_params': 
-                                {'data': [json.loads(msg['data'])],
+                                {'data': [ujson.loads(msg['data'])],
                                  'message': '',
                                  'success': True,
                                  'totalCount': '0'},

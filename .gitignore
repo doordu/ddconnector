@@ -8,3 +8,4 @@ ddconnector.log
 ddconnector.log.*
 __pycache__
 .vscode/
+tests/json_raw.py

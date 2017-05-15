@@ -1,5 +1,5 @@
 import base64
-import json
+import ujson as json
 
 from ddconnector.exceptions import DecodeException
 

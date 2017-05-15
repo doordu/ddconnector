@@ -1,5 +1,5 @@
 import logging
-import json
+import ujson as json
 import asyncio
 
 from ddconnector.decoder import encode

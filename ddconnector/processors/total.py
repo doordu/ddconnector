@@ -1,8 +1,4 @@
-import logging
-import json
 import asyncio
-
-from ddconnector.decoder import encode
 
 
 @asyncio.coroutine
