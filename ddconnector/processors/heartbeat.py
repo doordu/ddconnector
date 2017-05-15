@@ -60,7 +60,35 @@ def heartbeat(protocol, msg):
                     'cmd': 'heart_beat'}
         response = encode(response)
         protocol.transport.write(response)
+        yield from send_unread_command(protocol, pool, guid)
     except IndexError:
         raise FormatException()
-    
-    
+
+@asyncio.coroutine
+def send_unread_command(protocol, pool, guid):
+    commands = None
+    with (yield from pool) as conn:
+        commands = yield from conn.smembers('ddconnector_unread_command_for_' + guid)
+
+    for command in commands:
+        logging.info("下发未读指令[%s]！guid: %s", command, guid)
+        request_message = {'cmd': command.decode('utf-8'),
+                           'request_id': guid,
+                           'response_params':
+                               {'data': [],
+                                'message': '',
+                                'success': True,
+                                'totalCount': '0'},
+                           'response_type': False,
+                           'token_id': ''}
+        request_message = encode(request_message)
+        try:
+            protocol.server.doors[guid].transport.write(request_message)
+        except KeyError:
+            protocol.server.raven.captureException()
+            logging.info("guid: %s 不在线，下发指令失败！", guid)
+
+
+
+
+

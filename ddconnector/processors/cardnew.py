@@ -1,5 +1,5 @@
 import logging
-import ujson
+import ujson as json
 import asyncio
 from collections import defaultdict
 
@@ -17,7 +17,7 @@ def cardnew(protocol, msg):
         request_message = {'cmd': 'cardNew',
                            'request_id': msg['guid'],
                            'response_params': 
-                                {'data': [ujson.loads(msg['data'])],
+                                {'data': [json.loads(msg['data'])],
                                  'message': '',
                                  'success': True,
                                  'totalCount': '0'},
@@ -38,16 +38,16 @@ def cardnew(protocol, msg):
         # 收到门禁开门回复
         logging.info("收到下发黑白名单回复！guid: %s", msg['guid'])
         response_message = {'cmd': 'cardNew',
-                             'request_id': msg['guid'],
-                             'response_params': {'data': [],
-                                                 'message': '',
-                                                 'success': True,
-                                                 'totalCount': '0'},
-                             'response_type': True,
-                             'token_id': ''}
+                            'request_id': msg['guid'],
+                            'response_params': {'data': [],
+                                                'message': '',
+                                                'success': True,
+                                                'totalCount': '0'},
+                            'response_type': True,
+                            'token_id': ''}
         response_message = encode(response_message)
         # 根据之前的门禁guid => [等候者列表]关系进行回包
-            
+
         try:
             protocol.server.waiters[msg['guid']].transport.write(response_message)
             protocol.server.waiters[msg['guid']].transport.close()
