@@ -60,13 +60,21 @@ def heartbeat(protocol, msg):
                     'cmd': 'heart_beat'}
         response = encode(response)
         protocol.transport.write(response)
-        yield from send_unread_command(protocol, pool, guid)
+        yield from send_unread_commands(protocol, guid)
     except IndexError:
         raise FormatException()
 
 @asyncio.coroutine
-def send_unread_command(protocol, pool, guid):
+def send_unread_commands(protocol, guid):
+    '''
+    从redis查询并发送未读命令
+    :param protocol: 
+    :param pool:
+    :param guid:
+    '''
     commands = None
+    pool = yield from connect(protocol)
+    
     with (yield from pool) as conn:
         commands = yield from conn.smembers('ddconnector_unread_command_for_' + guid)
 
