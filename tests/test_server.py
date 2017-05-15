@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 from ddconnector.server import Server
 
@@ -19,6 +19,6 @@ class TestServer(unittest.TestCase):
         
         raven = Mock()
         server = Server(config, raven)
-        loop.run_until_complete.return_value = server
         server.loop = loop
         server.run()
+        loop.run_forever.assert_called()

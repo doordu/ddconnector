@@ -39,4 +39,6 @@ setup(
             'ddconnector_gc = scripts.ddconnector_gc_script:main'
         ]
     },
+    test_suite='nose.collector',
+    tests_require=['nose'],  
 )

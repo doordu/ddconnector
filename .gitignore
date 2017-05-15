@@ -7,3 +7,4 @@ thirdparts/
 ddconnector.log
 ddconnector.log.*
 __pycache__
+.vscode/
