@@ -1,10 +1,8 @@
 import logging
 import json
 import asyncio
-from collections import defaultdict
 
 from ddconnector.decoder import encode
-
 
 @asyncio.coroutine
 def cardnew(protocol, msg):
@@ -16,11 +14,11 @@ def cardnew(protocol, msg):
         logging.info("收到下发黑白名单请求！guid: %s", msg['guid'])
         request_message = {'cmd': 'cardNew',
                            'request_id': msg['guid'],
-                           'response_params': 
-                                {'data': [json.loads(msg['data'])],
-                                 'message': '',
-                                 'success': True,
-                                 'totalCount': '0'},
+                           'response_params':
+                               {'data': [json.loads(msg['data'])],
+                                'message': '',
+                                'success': True,
+                                'totalCount': '0'},
                            'response_type': False,
                            'token_id': ''}
         request_message = encode(request_message)
@@ -28,7 +26,7 @@ def cardnew(protocol, msg):
             protocol.server.doors[msg['guid']].transport.write(request_message)
             protocol.server.waiters[msg['guid']] = protocol
         except KeyError:
-            #protocol.server.raven.captureException()
+            # protocol.server.raven.captureException()
             logging.error("guid: %s 不在线，下发黑白名单指令失败！", msg['guid'])
             response_message = {'cmd': 'cardNew', 'status': -1, 'message': '门禁主机不在线'}
             response_message = encode(response_message)
@@ -38,16 +36,16 @@ def cardnew(protocol, msg):
         # 收到门禁开门回复
         logging.info("收到下发黑白名单回复！guid: %s", msg['guid'])
         response_message = {'cmd': 'cardNew',
-                             'request_id': msg['guid'],
-                             'response_params': {'data': [],
-                                                 'message': '',
-                                                 'success': True,
-                                                 'totalCount': '0'},
-                             'response_type': True,
-                             'token_id': ''}
+                            'request_id': msg['guid'],
+                            'response_params': {'data': [],
+                                                'message': '',
+                                                'success': True,
+                                                'totalCount': '0'},
+                            'response_type': True,
+                            'token_id': ''}
         response_message = encode(response_message)
         # 根据之前的门禁guid => [等候者列表]关系进行回包
-            
+
         try:
             protocol.server.waiters[msg['guid']].transport.write(response_message)
             protocol.server.waiters[msg['guid']].transport.close()
