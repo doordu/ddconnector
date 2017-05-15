@@ -68,9 +68,8 @@ def heartbeat(protocol, msg):
 def send_unread_commands(protocol, guid):
     '''
     从redis查询并发送未读命令
-    :param protocol: 
-    :param pool:
-    :param guid:
+    :param protocol: Protocol
+    :param guid:门禁机GUID
     '''
     commands = None
     pool = yield from connect(protocol)
