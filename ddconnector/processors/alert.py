@@ -2,8 +2,8 @@ import logging
 import ujson as json
 import asyncio
 import time
-import urllib
-import urllib2
+from urllib import request, parse
+
 
 import aioredis
 
@@ -68,10 +68,12 @@ def call_service_alert(guid):
     req_url = protocol.server.config['ddservice']['host']+'/dds/door/v1/message/alert'
     req_data = {"access_token":get_access_token(),"timestamp":time.time(),"guid":guid}
     req_data = sorted(data.iteritems(), key=lambda d:d[1], reverse = True)
-    req_data_urlencode = urllib.urlencode(req_data)
-    req = urllib2.Request(url = req_url,data = req_data_urlencode)
-    res_data = urllib2.urlopen(req)
-    json_data = res_data.read()
+    req_data_urlencode = parse.urlencode(req_data)
+    req = request.Request(url = req_url,data = req_data_urlencode)
+    try:
+        res_data = request.urlopen(req).read()
+    except error.HTTPError as e:
+        logging.info("调用防拆报警服务失败！req_url: %s, req_data: %s, res_code: %s, res_data: %s" % (req_url, req_data_urlencode, e.code(), res_data))
     data = json.loads(json_data)
     return data
 
@@ -86,11 +88,14 @@ def get_access_token():
     if(cache_token is None):
         req_url = protocol.server.config['ddservice']['host']+'/dds/auth/v1/oauth2/access_token'
         req_data = {"appid":protocol.server.config['ddservice']['appid'],"secret":protocol.server.config['ddservice']['secret']}
-        req_data_urlencode = urllib.urlencode(req_data)
-        req = urllib2.Request(url = req_url,data = req_data_urlencode)
-        res_data = urllib2.urlopen(req)
-        json_data = res_data.read()
-        data = json.loads(json_data)
+        req_data_urlencode = parse.urlencode(req_data)
+        req = request.Request(url = req_url,data = req_data_urlencode)
+        try:
+            res_data = request.urlopen(req).read()
+        except error.HTTPError as e:
+            logging.info("调用防拆报警服务失败！req_url: %s, req_data: %s, res_code: %s, res_data: %s" % (req_url, req_data_urlencode, e.code(), res_data))
+
+        data = json.loads(res_data)
         if(data is not None):
             with (yield from pool) as conn:
                 commands = yield from conn.set(redis_key,data['data']['access_token'],data['data']['expires_in'])
