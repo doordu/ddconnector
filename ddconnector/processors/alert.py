@@ -49,16 +49,15 @@ def alert(protocol, msg):
         protocol.server.doors[guid] = protocol
 
         logging.info("收到防拆报警！guid: %s, address: %s" % (guid, address))
-        pool = yield from connect(protocol)
         redis_key = '{}_cmd_alert'.format(guid)
-        commands = None
+        pool = yield from connect(protocol)
         with (yield from pool) as conn:
             commands = yield from conn.get(redis_key)
-        if(commands is None) :
+        if(commands != 1) :
             yield from call_service_alert(protocol, guid)
 
             with (yield from pool) as conn:
-                commands = yield from conn.set(redis_key,time.time(),60)
+                commands = yield from conn.set(redis_key,1,60)
 
     except IndexError:
         raise FormatException()
@@ -80,12 +79,11 @@ def call_service_alert(guid):
 
 def get_access_token():
     redis_key = 'ddconnector_dds_access_token'
-    cache_token = None
     pool = yield from connect(protocol)
     with (yield from pool) as conn:
         cache_token = yield from conn.get(redis_key)
 
-    if(cache_token is None):
+    if(cache_token == ""):
         req_url = protocol.server.config['ddservice']['host']+'/dds/auth/v1/oauth2/access_token'
         req_data = {"appid":protocol.server.config['ddservice']['appid'],"secret":protocol.server.config['ddservice']['secret']}
         req_data_urlencode = parse.urlencode(req_data)
@@ -96,7 +94,7 @@ def get_access_token():
             logging.info("调用防拆报警服务失败！req_url: %s, req_data: %s, res_code: %s, res_data: %s" % (req_url, req_data_urlencode, e.code(), res_data))
 
         data = json.loads(res_data)
-        if(data is not None):
+        if(data):
             with (yield from pool) as conn:
                 commands = yield from conn.set(redis_key,data['data']['access_token'],data['data']['expires_in'])
             return data['data']['access_token'];
