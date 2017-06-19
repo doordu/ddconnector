@@ -74,7 +74,7 @@ def call_service_alert(guid):
         res_data = request.urlopen(req).read()
     except error.HTTPError as e:
         logging.info("调用防拆报警服务失败！req_url: %s, req_data: %s, res_code: %s, res_data: %s" % (req_url, req_data_urlencode, e.code(), res_data))
-    data = json.loads(json_data)
+    data = json.loads(res_data)
     return data
 
 
