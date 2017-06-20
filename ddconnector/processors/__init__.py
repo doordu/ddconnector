@@ -6,6 +6,7 @@ from .debug import debug
 from .magic import magic
 from .total import total
 from .gc import gc
+from .alert import alert
 
 processors = {
     'heart_beat': heartbeat,                        # 心跳
