@@ -60,6 +60,11 @@ async def alert(protocol, msg):
         protocol.alert_time = alert_time
         await get_access_token(protocol)
         await alert_to_service(protocol, alert_time, guid)
+
+        response = {'request_id': guid,
+                    'cmd': 'alert'}
+        response = encode(response)
+        protocol.transport.write(response)
     else:
         logging.info("收到报警信息！guid: %s，未达到上报时间", guid)
 
