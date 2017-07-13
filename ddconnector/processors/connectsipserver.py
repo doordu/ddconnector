@@ -40,8 +40,8 @@ def connectsipserver(protocol, msg):
         response_message = {'cmd': 'connectSipServer',
                             'request_id': msg['guid'],
                             'response_params': {'data': [],
-                                                'message': '',
-                                                'success': True,
+                                                'message': msg['message'],
+                                                'success': msg['success'],
                                                 'totalCount': '0'},
                             'response_type': True,
                             'token_id': ''}
