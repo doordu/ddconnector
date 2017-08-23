@@ -16,13 +16,13 @@ def heart_beat(loop):
                                                         loop=loop)
     writer.write(message)
     data = yield from reader.read(1024)
-    print(data)
+    print(message)
     #writer.close()
 
 start = time.time()
 
 loop = asyncio.get_event_loop()
-tasks = [heart_beat(loop) for i in range(3000)]
+tasks = [heart_beat(loop) for i in range(1)]
 loop.run_until_complete(asyncio.wait(tasks))
 loop.close()
 

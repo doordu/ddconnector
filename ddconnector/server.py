@@ -3,6 +3,7 @@ import uvloop
 
 from ddconnector.protocol import Protocol
 
+
 class Server:
     def __init__(self, config, raven):
         self.config = config
