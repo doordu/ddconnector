@@ -8,13 +8,12 @@ import time
 @asyncio.coroutine
 def heart_beat(loop):
     #d = {"guid":str(uuid.uuid4()),"cmd":"heart_beat","version":"5.8.000.0"}
-    d = {"guid":"DDD4001702-1676","cmd":"heart_beat","version":"5.8.000.0"}
+    d = {"guid":"testzz20170609","cmd":"heart_beat","version":"5.8.000.0"}
     message = json.dumps(d)
     message = base64.encodebytes(message.encode('utf_8')) + b'*'
     # swheart.doordu.com
-    reader, writer = yield from asyncio.open_connection('swheart.doordu.com', 9501,
+    reader, writer = yield from asyncio.open_connection('localhost', 9501,
                                                         loop=loop)
-    print(message)
     writer.write(message)
     data = yield from reader.read(1024)
     print(data)
@@ -23,7 +22,7 @@ def heart_beat(loop):
 start = time.time()
 
 loop = asyncio.get_event_loop()
-tasks = [heart_beat(loop) for i in range(1)]
+tasks = [heart_beat(loop) for i in range(3000)]
 loop.run_until_complete(asyncio.wait(tasks))
 loop.close()
 

@@ -53,4 +53,4 @@ def connectsipserver(protocol, msg):
             protocol.server.waiters[msg['guid']].transport.close()
             del protocol.server.waiters[msg['guid']]
         except KeyError:
-            logging.info("黑白名单回复之前发送请求关联关系不存在！guid: %s", msg['guid'])
+            logging.info("下发连接SIP服务器指令回复之前发送请求关联关系不存在！guid: %s", msg['guid'])

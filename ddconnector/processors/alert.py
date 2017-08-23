@@ -7,7 +7,6 @@ import aiohttp
 
 """
 防拆报警
-reference: https://aiohttp.readthedocs.io/en/stable/client.html
 """
 
 ALERT_FREQUENTLY = 60

@@ -14,7 +14,7 @@ def connect(protocol):
     if protocol.server.redis_pool is None:
         protocol.server.redis_pool = yield from aioredis.create_pool(
             (protocol.server.config['redis']['host'], protocol.server.config.getint('redis', 'port')), 
-            password=protocol.server.config['redis']['password'], 
+            password=protocol.server.config['redis']['password'] if protocol.server.config['redis']['password'] else None,
             minsize=protocol.server.config.getint('redis', 'pool_min_size'),
             maxsize=protocol.server.config.getint('redis', 'pool_max_size'),
             loop=protocol.server.loop)
@@ -38,7 +38,7 @@ def heartbeat(protocol, msg):
         msg['client_host'], msg['client_port'] = address
         
         try:
-            # 实验性回收旧连接
+            # 回收旧连接
             last_protocol = protocol.server.doors[guid]
             if last_protocol != protocol:
                 logging.info("回收旧连接！guid: %s, address: %s", guid, last_protocol.transport.get_extra_info('peername'))
