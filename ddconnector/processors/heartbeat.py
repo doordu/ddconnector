@@ -55,7 +55,7 @@ def heartbeat(protocol, msg):
         pool = yield from connect(protocol)
         redis_key = '{}_heart_beta'.format(guid)
         with (yield from pool) as conn:
-            yield from conn.set(redis_key, json.dumps(msg), expire=protocol.server.config.getint('general', 'heartbeat_expires'))
+            yield from conn.execute('setex', protocol.server.config.getint('general', 'heartbeat_expires'), json.dumps(msg))
         response = {'request_id': guid, 
                     'cmd': 'heart_beat'}
         response = encode(response)
@@ -63,6 +63,7 @@ def heartbeat(protocol, msg):
         yield from send_unread_commands(protocol, guid)
     except IndexError:
         raise FormatException()
+
 
 @asyncio.coroutine
 def send_unread_commands(protocol, guid):
@@ -75,7 +76,7 @@ def send_unread_commands(protocol, guid):
     pool = yield from connect(protocol)
     
     with (yield from pool) as conn:
-        commands = yield from conn.smembers('ddconnector_unread_command_for_' + guid)
+        commands = yield from conn.execute('smembers', 'ddconnector_unread_command_for_{}'.format(guid))
 
     for command in commands:
         logging.info("下发未读指令[%s]！guid: %s", command, guid)
